@@ -241,7 +241,7 @@ public class B2BService {
 			try {
 				conn = getDbConnection();
 				stmt = conn.createStatement();
-				String sql = "update "+DBName+".dbo.QCDataCollection set IpqcTMXStatus='1',pqcTMXStatus='0' where qc_id='"+qc_id+"'";
+				String sql = "update "+DBName+".dbo.QCDataCollection set IpqcTMXStatus='1' where qc_id='"+qc_id+"'";
 //				System.out.println("sql="+sql);
 				stmt.executeUpdate(sql);
 			}catch(Exception e) {
