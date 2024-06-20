@@ -111,7 +111,7 @@ html, body {
 				<td align="center" width="5%">${pqcItem.getIpqc2()}</td>	
 				<td align="center" width="5%">${pqcItem.getIpqc3()}</td>	
 				<c:choose>
-					<c:when test="${ipqcItem.getUDF03()=='1'}">
+					<c:when test="${pqcItem.getUDF03()=='1'}">
 						<c:choose>
 							<c:when test="${pqcItem.getJYT012b008() != ''} && ${pqcItem.getJYT012b009() != ''}">
 								<td width="10%"><input type="number" value="${pqcItem.getPqc1()}" onblur="MinMaxInput(this, ${pqcItem.getMin()}, ${pqcItem.getMax()})" id="ipqc1${status.index}" class="ipqc1" name="ipqcRecords[${status.index}].ipqc1" step="any" required> </td>

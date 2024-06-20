@@ -27,10 +27,10 @@ import com.joytech.keyence.bean.QCResult;
 
 @Service
 public class B2BService {
-	public static String JDBC_URL = "jdbc:sqlserver://192.168.1.9:1433;databaseName=TEST1;user=pwc;password=PWC@admin;characterEncoding=utf8;encrypt=false";
-//	public static String JDBC_URL = "jdbc:sqlserver://192.168.1.9:1433;databaseName=JOYTECH;user=pwc;password=PWC@admin;characterEncoding=utf8;";
-	public static String DBName="TEST1";//測試資料庫
-//	public static String DBName="JOYTECH";//正式資料庫
+//	public static String JDBC_URL = "jdbc:sqlserver://192.168.1.9:1433;databaseName=TEST1;user=pwc;password=PWC@admin;characterEncoding=utf8;encrypt=false";
+	public static String JDBC_URL = "jdbc:sqlserver://192.168.1.9:1433;databaseName=JOYTECH;user=pwc;password=PWC@admin;characterEncoding=utf8;encrypt=false";
+//	public static String DBName="TEST1";//測試資料庫
+	public static String DBName="JOYTECH";//正式資料庫
 	public static String imageURL="http://192.168.1.15";
 	public int pageSize=10;//分頁資料筆數
 
@@ -58,8 +58,9 @@ public class B2BService {
 		try {
 			conn = getDbConnection();					
 			String sql = "select p.qc_id,p.itemName,p.manufactureOrder,p.manufactureNo,p.partNumber,p.ipqcCREATE_DATE from "+DBName+".dbo.QCDataCollection as p"
-					+" left join "+DBName+".dbo.QCDataCollectionContent as c on p.qc_id = c.qc_id where p.IpqcTMXStatus='0' "
-					+" group by p.qc_id,p.itemName,p.manufactureOrder,p.manufactureNo,p.partNumber,p.ipqcCREATE_DATE";			
+					+" left join "+DBName+".dbo.QCDataCollectionContent as c on p.qc_id = c.qc_id where p.IpqcTMXStatus='0' and p.pqcStatus='0' "
+					+" group by p.qc_id,p.itemName,p.manufactureOrder,p.manufactureNo,p.partNumber,p.ipqcCREATE_DATE";	
+			System.out.println("sql="+sql);
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
 			while(rs.next()) {
@@ -133,7 +134,7 @@ public class B2BService {
 			try {
 				conn = getDbConnection();			
 				String sql = "select qc_id,itemSN,testItem,testUnit,standardValue,upperLimit,lowerLimit,testTool,flag,ipqc1,ipqc2,ipqc3 from "+DBName+".dbo.QCDataCollectionContent where "
-						+"qc_id='"+qc_id+"'";
+						+"qc_id='"+qc_id+"' order by itemSN asc";
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
@@ -356,12 +357,13 @@ public class B2BService {
 		try {
 			conn = getDbConnection();			
 			String sql = "select qc_id,itemSN,testItem,testUnit,standardValue,upperLimit,lowerLimit,testTool,flag,ipqc1,ipqc2,ipqc3,pqc1,pqc2,pqc3 from "+DBName+".dbo.QCDataCollectionContent where "
-					+"qc_id='"+qc_id+"'";
+					+"qc_id='"+qc_id+"' order by itemSN asc";
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
 			while(rs.next()) {
 				IpqcItem ipqcItem =new IpqcItem();
 				ipqcItem.setJYT012b003(rs.getString("itemSN"));
+				System.out.println("itemSN="+rs.getString("itemSN"));
 				ipqcItem.setJYT012b005(rs.getString("testItem"));
 				ipqcItem.setJYT012b006(rs.getString("testUnit"));
 				ipqcItem.setJYT012b007(rs.getString("standardValue"));
@@ -388,7 +390,9 @@ public class B2BService {
 					}
 				}
 				ipqcItem.setJYT012b010(rs.getString("testTool"));
+				System.out.println("testTool="+rs.getString("testTool"));
 				ipqcItem.setUDF03(rs.getString("flag"));
+				System.out.println("getUDF03="+ipqcItem.getUDF03());
 				ipqcItem.setIpqc1(rs.getString("ipqc1"));
 				ipqcItem.setIpqc2(rs.getString("ipqc2"));
 				ipqcItem.setIpqc3(rs.getString("ipqc3"));
@@ -514,7 +518,7 @@ public class B2BService {
         try {
         	conn = getDbConnection();            
         	String sql = "SELECT distinct p.qc_id,p.itemName,p.manufactureOrder,p.manufactureNo,p.partNumber,p.ipqcCREATE_DATE FROM "+DBName+".dbo.QCDataCollection as p,"
-        			+""+DBName+".dbo.QCDataCollectionContent as c where p.qc_id=c.qc_id and p.pqcStatus='0'";
+        			+""+DBName+".dbo.QCDataCollectionContent as c where p.qc_id=c.qc_id and p.pqcStatus='1' and p.IpqcTMXStatus='1' and p.pqcTMXStatus='1'";
         	ps = conn.prepareStatement(sql);           
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -560,10 +564,10 @@ public class B2BService {
             	ipqcItem.setJYT012b008(rs.getString("upperLimit").strip());
             	ipqcItem.setJYT012b009(rs.getString("lowerLimit").strip());
             	ipqcItem.setJYT012b010(rs.getString("testTool"));
-            	ipqcItem.setUDF03(rs.getString("flag"));
-            	ipqcItem.setIpqc1(rs.getString("ipqc1").strip());
-            	ipqcItem.setIpqc2(rs.getString("ipqc2").strip());
-            	ipqcItem.setIpqc3(rs.getString("ipqc3").strip());
+            	ipqcItem.setUDF03(rs.getString("flag"));            	
+            	ipqcItem.setIpqc1(rs.getString("ipqc1"));
+            	ipqcItem.setIpqc2(rs.getString("ipqc2"));
+            	ipqcItem.setIpqc3(rs.getString("ipqc3"));
             	if(rs.getString("flag").equals("1")) {
 					if(rs.getString("upperLimit")!=null && !rs.getString("upperLimit").equals("") &&
 							rs.getString("lowerLimit")!=null && !rs.getString("lowerLimit").equals("") ) {

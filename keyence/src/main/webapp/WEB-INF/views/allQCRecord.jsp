@@ -42,7 +42,7 @@
 					</c:if>
 					<c:if test="${index.index%2!=0}">
 					<tr>						
-						<td><a href="${pageContext.request.contextPath}/getFinishedRecordData/${recordItem.getQc_id()}/${pqcCREATOR}">${index.index + 1}</a></td>
+						<td><a href="${pageContext.request.contextPath}/getTestSpec/${recordItem.getQc_id()}/${pqcCREATOR}">${index.index + 1}</a></td>
 						<td>${recordItem.getManufactureOrder()}</td>
 						<td>${recordItem.getManufactureNo()}</td>
 						<td>${recordItem.getPartNumber()}</td>

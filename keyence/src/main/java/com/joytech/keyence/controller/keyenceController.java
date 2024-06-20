@@ -88,7 +88,7 @@ public class keyenceController {
         	 JSONObject m = (JSONObject) a.get(i);
         	 b2bService.updIpqcData(qc_id, m.get("itemSN").toString(), m.get("ipqc1").toString(), m.get("ipqc2").toString(), m.get("ipqc3").toString(),ipqcCREATOR);
         }
-      //回寫現場人員TMX檢驗flag為1
+      //回寫現場人員檢驗剩餘項目完成flag為1
         b2bService.updIpqcStatus(qc_id);
 		out.println("<script language=\"javascript\">");
 		out.print("alert(\"新增資料成功\");location.href=\""+request.getContextPath()+"/getIpqcRecord/"+ipqcCREATOR+"\";");
@@ -166,6 +166,7 @@ public class keyenceController {
 				JSONObject m = (JSONObject) a.get(i);
 				b2bService.updPqcData(qc_id,m.get("itemSN").toString(), m.get("ipqc1").toString(),m.get("ipqc2").toString(),m.get("ipqc3").toString());
 			}			
+			System.out.println("myNumberInput="+myNumberInput);
 			if(myNumberInput!=null && !myNumberInput.equals("") && myNumberInput.equals("0")) {
 				b2bService.insPqcResult(qc_id,badReasons, "合格", supervisor, inspectors, handleResult, pqcCREATOR);
 			}else {
@@ -173,8 +174,8 @@ public class keyenceController {
 			}
 			
 			//回寫品檢檢驗flag為1
-//			b2bService.updPqcFlag(qc_id);
-			//回寫品檢TMX檢驗flag為1
+			b2bService.updPqcFlag(qc_id);
+			//回寫品檢檢驗剩餘項目完成flag為1
 			b2bService.updPqcTMXFlag(qc_id);
 			
 			out.println("<script language=\"javascript\">");
