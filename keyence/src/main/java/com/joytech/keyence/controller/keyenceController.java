@@ -166,7 +166,7 @@ public class keyenceController {
 				JSONObject m = (JSONObject) a.get(i);
 				b2bService.updPqcData(qc_id,m.get("itemSN").toString(), m.get("ipqc1").toString(),m.get("ipqc2").toString(),m.get("ipqc3").toString());
 			}			
-			System.out.println("myNumberInput="+myNumberInput);
+//			System.out.println("myNumberInput="+myNumberInput);
 			if(myNumberInput!=null && !myNumberInput.equals("") && myNumberInput.equals("0")) {
 				b2bService.insPqcResult(qc_id,badReasons, "合格", supervisor, inspectors, handleResult, pqcCREATOR);
 			}else {
